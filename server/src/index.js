@@ -1,55 +1,56 @@
 import cors from "cors";
+import bodyParser from "body-parser";
+import fs from "fs/promises";
+
 import { configDotenv } from "dotenv";
 import express from "express";
 
 configDotenv();
-
-const { PORT, BACKEND_URL, META_APP_ACCESS_TOKEN } = process.env;
 const app = express();
-app.use(cors());
-app.use(express.json());
 const port = PORT || 5000;
 
+const { PORT, BACKEND_URL, META_APP_ACCESS_TOKEN } = process.env;
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.get("/", (req, res) => {
-  res.send("Server is running");
+  res.send("<p>Node.js Server is running</p>");
 });
 
-app.get("/api/privacy-policy", (req, res) => {
-  res.setHeader("Content-Type", "text/html");
-  res.sendFile("privacy-policy.html", { root: "." });
-});
-
-app.get("/api/webhook", (req, res) => {
-  const { hub, mode, token } = req.query;
-  if (hub && mode && token) {
-    if (mode === "subscribe" && token === META_APP_ACCESS_TOKEN) {
-      console.log("Webhook verified");
-      res.status(200).send(hub.challenge);
-    } else {
-      console.log("Webhook verification failed");
-      res.sendStatus(403);
-    }
-  } else {
-    console.log("Invalid webhook request");
-    res.sendStatus(400);
+app.get("/api/privacy-policy", async (req, res) => {
+  try {
+    const privacyPolicyHtml = await fs.readFile("privacy-policy.html", "utf8");
+    res.setHeader("Content-Type", "text/html");
+    res.send(privacyPolicyHtml);
+  } catch (error) {
+    console.error("Error fetching privacy policy:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
-app.post("/api/webhook", (req, res) => {
-  const body = req.body;
-  if (body.object) {
-    if (body.entry) {
-      console.log("Webhook received:", body);
-      res.sendStatus(200);
+app
+  .route("/webhooks")
+  .get((req, res) => {
+    const hubMode = req.query["hub.mode"];
+    const hubChallenge = req.query["hub.challenge"];
+    const hubVerifyToken = req.query["hub.verify_token"];
+    if (hubChallenge && hubVerifyToken) {
+      res.status(200).send(hubChallenge);
     } else {
-      console.log("No entry in webhook request");
-      res.sendStatus(404);
+      res.send("<p>This is a GET Request, Hello Webhook!</p>");
     }
-  } else {
-    console.log("Invalid webhook request");
-    res.sendStatus(400);
-  }
-});
+  })
+  .post((req, res) => {
+    const { object, entry } = req.body;
+    if (object && entry) {
+      console.log("Webhook received:", JSON.stringify(req.body, null, 2));
+      res.status(200).send("Webhook received successfully");
+    } else {
+      res.status(400).send("Invalid webhook data");
+    }
+  });
 
 app.listen(PORT, () => {
   if (process.env.NODE_ENV !== "production") {
