@@ -7,13 +7,14 @@ import express from "express";
 
 configDotenv();
 const app = express();
-const port = PORT || 5000;
 
 const { PORT, BACKEND_URL, META_APP_ACCESS_TOKEN } = process.env;
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+const port = PORT || 5000;
 
 app.get("/", (req, res) => {
   res.send("<p>Node.js Server is running</p>");
