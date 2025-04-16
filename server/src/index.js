@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 import bodyParser from "body-parser";
 import path from "path";
+import { fileURLToPath } from "url";
 
 import metaRoutes from "./routes/metaRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
@@ -25,6 +26,12 @@ app.get("/", (req, res) => {
 
 app.use("/api", metaRoutes);
 app.use("/api/auth", authRoutes);
+
+// app.use(express.static(path.join(__dirname, "dist"))); // or 'build' for CRA
+
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "dist", "index.html")); // fallback route
+// });
 
 app.listen(PORT, () => {
   if (process.env.NODE_ENV !== "production") {
