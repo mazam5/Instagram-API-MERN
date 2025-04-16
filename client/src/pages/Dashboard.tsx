@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useSearchParams, useLocation } from "react-router";
+import { useSearchParams } from "react-router";
 import axios from "axios";
 
 const Dashboard = () => {
-  const location = useLocation();
-  const [searchParams] = useSearchParams(location.search);
+  const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const userId = searchParams.get("user");
 
@@ -26,6 +25,8 @@ const Dashboard = () => {
   ]);
 
   useEffect(() => {
+    localStorage.setItem("token", token || "");
+    localStorage.setItem("userId", userId || "");
     if (token && userId) {
       fetchUserProfile();
       fetchUserMedia();

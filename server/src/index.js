@@ -1,6 +1,7 @@
 import cors from "cors";
 import express from "express";
 import bodyParser from "body-parser";
+import path from "path";
 
 import metaRoutes from "./routes/metaRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
@@ -24,12 +25,6 @@ app.get("/", (req, res) => {
 
 app.use("/api", metaRoutes);
 app.use("/api/auth", authRoutes);
-
-app.use(express.static("dist"));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "dist", "index.html"));
-});
 
 app.listen(PORT, () => {
   if (process.env.NODE_ENV !== "production") {
