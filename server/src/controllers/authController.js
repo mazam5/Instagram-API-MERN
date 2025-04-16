@@ -1,15 +1,15 @@
 import axios from "axios";
+import { configDotenv } from "dotenv";
 
+configDotenv();
 const { META_APP_ID, META_APP_SECRET, REDIRECT_URI, FRONTEND_URL } =
   process.env;
 
-export const postAccessToken = async (req, res) => {
+export const handleInstagramCallback = async (req, res) => {
   const { code } = req.query;
 
   if (!code) {
-    return res.status(400).send("No code provided");
-  } else {
-    console.log("Code received:", code);
+    return res.status(400).send("Missing 'code' in query.");
   }
 
   try {
@@ -31,46 +31,29 @@ export const postAccessToken = async (req, res) => {
     );
 
     const { access_token, user_id } = tokenResponse.data;
-    console.log("Short-lived token acquired:", tokenResponse.data);
-    res.redirect(
-      `${FRONTEND_URL}/dashboard?token=${access_token}&user_id=${user_id}`
-    );
-  } catch (error) {
-    console.error(
-      "Error exchanging code for token:",
-      error.response?.data || error.message
-    );
-    res.status(500).send("Authentication failed");
-  }
-};
+    console.log("Access Token received:", tokenResponse.data);
 
-export const getLongAccessToken = async (req, res) => {
-  const { access_token } = req.query;
-
-  if (!access_token) {
-    return res.status(400).send("Missing parameters");
-  } else {
-    console.log("Parameters received:", {
-      access_token,
-    });
-  }
-
-  try {
-    const response = await axios.get(
+    const longTokenRes = await axios.get(
       `https://graph.instagram.com/access_token`,
       {
         params: {
-          client_secret: META_APP_SECRET,
           grant_type: "ig_exchange_token",
+          client_secret: META_APP_SECRET,
           access_token: access_token,
         },
       }
     );
+
+    const longLivedToken = longTokenRes.data.access_token;
+
+    return res.redirect(
+      `${FRONTEND_URL}/dashboard?token=${longLivedToken}&user=${user_id}`
+    );
   } catch (error) {
     console.error(
-      "Error exchanging code for token:",
+      "Token exchange failed:",
       error.response?.data || error.message
     );
-    res.status(500).send("Authentication failed");
+    return res.status(500).send("Instagram login failed. Please try again.");
   }
 };

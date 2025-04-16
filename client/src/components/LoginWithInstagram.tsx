@@ -1,9 +1,9 @@
 import { Instagram } from "lucide-react";
 import { Button } from "./ui/button";
 const LoginWithInstagram = () => {
-  const { VITE_APP_ID } = import.meta.env;
+  const { VITE_APP_ID, VITE_BACKEND_URL } = import.meta.env;
   const redirectUri = encodeURIComponent(
-    "https://instagram-api-mern.onrender.com/api/auth/instagram/callback",
+    `${VITE_BACKEND_URL}/api/auth/instagram/callback`,
   );
 
   const navigateToInstagramLogin = () => {

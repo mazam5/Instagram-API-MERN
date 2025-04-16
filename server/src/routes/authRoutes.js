@@ -1,14 +1,11 @@
-import express from "express";
 import { configDotenv } from "dotenv";
-import {
-  getLongAccessToken,
-  postAccessToken,
-} from "../controllers/authController.js";
+import express from "express";
+import { handleInstagramCallback } from "../controllers/authController.js";
 
 configDotenv();
 
 const router = express.Router();
 
-router.route("/access-token").post(postAccessToken).get(getLongAccessToken);
+router.get("/instagram/callback", handleInstagramCallback);
 
 export default router;
