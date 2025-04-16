@@ -8,6 +8,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard/:token/:userId" element={<Dashboard />} />
+        <Route path="/home" element={<Dashboard />} />
+        <Route path="/home/:token/:userId" element={<Dashboard />} />
       </Routes>
     </div>
   );
