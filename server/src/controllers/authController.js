@@ -5,7 +5,7 @@ configDotenv();
 const {
   LOGIN_OAUTH_BASE,
   CLIENT_ID,
-  SCOPES,
+  FRONTEND_BASE,
   GRAPH_ACCESS_TOKEN,
   CLIENT_SECRET,
 } = process.env;
@@ -69,7 +69,7 @@ export const handleInstagramCallback = async (req, res) => {
     const longLivedToken = longTokenRes.data.access_token;
 
     return res.redirect(
-      `${FRONTEND_URL}/dashboard?token=${longLivedToken}&user=${user_id}`
+      `${FRONTEND_BASE}/dashboard?token=${longLivedToken}&user=${user_id}`
     );
   } catch (error) {
     console.error(
