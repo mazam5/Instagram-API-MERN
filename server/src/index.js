@@ -14,7 +14,16 @@ const app = express();
 
 const { PORT, API_BASE } = process.env;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://instagram-api-mern.onrender.com",
+      "https://azam-fe-insta-api.netlify.app",
+    ],
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

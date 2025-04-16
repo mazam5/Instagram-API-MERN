@@ -65,11 +65,17 @@ export const handleInstagramCallback = async (req, res) => {
       }
     );
     console.log("Long-lived token response:", longTokenRes.data);
-
     const longLivedToken = longTokenRes.data.access_token;
+    res.cookie("access_token", longLivedToken, {
+      httpOnly: false,
+      secure: false,
+      sameSite: "Lax",
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
 
     return res.redirect(
-      `${FRONTEND_BASE}/dashboard?token=${longLivedToken}&user=${user_id}`
+      // `${FRONTEND_BASE}/dashboard?token=${longLivedToken}&user=${user_id}`
+      `${FRONTEND_BASE}/dashboard?user_id=${user_id}`
     );
   } catch (error) {
     console.error(
