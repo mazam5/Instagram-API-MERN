@@ -1,13 +1,13 @@
 import { Instagram } from "lucide-react";
 import { Button } from "./ui/button";
 const LoginWithInstagram = () => {
-  const { VITE_APP_ID, VITE_REDIRECT_URI, VITE_SCOPES, VITE_OAUTH_URL } =
-    import.meta.env;
+  // const { VITE_APP_ID, VITE_REDIRECT_URI, VITE_SCOPES, VITE_OAUTH_URL } =
+  //   import.meta.env;
 
   const navigateToInstagramLogin = () => {
-    // const { VITE_BACKEND_URL } = import.meta.env;
-    // window.location.href = `${VITE_BACKEND_URL}/auth/instagram`;
-    const authUrl = `https://${VITE_OAUTH_URL}?client_id=${VITE_APP_ID}&redirect_uri=${encodeURIComponent(VITE_REDIRECT_URI)}&scope=${VITE_SCOPES}&response_type=code`;
+    const authUrl =
+      "https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=1653002872006320&redirect_uri=https://instagram-api-mern.onrender.com/api/auth/instagram/callback&response_type=code&scope=instagram_business_basic%%2Cinstagram_business_manage_comments";
+
     window.location.href = authUrl;
   };
   return (

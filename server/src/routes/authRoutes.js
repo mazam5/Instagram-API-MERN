@@ -1,9 +1,12 @@
+import axios from "axios";
 import express from "express";
-const router = express.Router();
 import { configDotenv } from "dotenv";
+
+const router = express.Router();
 configDotenv();
 
-const { META_APP_ID, META_APP_SECRET, REDIRECT_URI } = process.env;
+const { META_APP_ID, META_APP_SECRET, REDIRECT_URI, INSTAGRAM_HOST_URL } =
+  process.env;
 
 router.get("/instagram/callback", async (req, res) => {
   const { code } = req.query;
@@ -28,7 +31,7 @@ router.get("/instagram/callback", async (req, res) => {
 
     // Optionally, exchange for a long-lived token
     const longLivedTokenResponse = await axios.get(
-      "https://graph.instagram.com/access_token",
+      `https://${INSTAGRAM_HOST_URL}/access_token`,
       {
         params: {
           grant_type: "ig_exchange_token",
@@ -41,9 +44,7 @@ router.get("/instagram/callback", async (req, res) => {
     const longLivedAccessToken = longLivedTokenResponse.data.access_token;
 
     // Redirect to frontend with token (consider using HTTP-only cookies or sessions for security)
-    res.redirect(
-      `http://localhost:3000/dashboard?token=${longLivedAccessToken}`
-    );
+    res.redirect(`${FRONTEND_URL}/dashboard?token=${longLivedAccessToken}`);
   } catch (error) {
     console.error(
       "Error exchanging code for token:",
