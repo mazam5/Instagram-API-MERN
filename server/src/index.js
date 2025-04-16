@@ -25,6 +25,12 @@ app.get("/", (req, res) => {
 app.use("/api", metaRoutes);
 app.use("/api/auth", authRoutes);
 
+app.use(express.static("dist"));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "dist", "index.html"));
+});
+
 app.listen(PORT, () => {
   if (process.env.NODE_ENV !== "production") {
     console.log("Running in development mode");
