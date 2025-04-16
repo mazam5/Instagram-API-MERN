@@ -3,7 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 
 import metaRoutes from "./routes/metaRoutes.js";
-import instagramRoutes from "./routes/instagramRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 import { configDotenv } from "dotenv";
 
@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", metaRoutes);
-app.use("/api/auth", instagramRoutes);
+app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
   if (process.env.NODE_ENV !== "production") {
