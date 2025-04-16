@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useSearchParams, useLocation, useParams } from "react-router";
 import axios from "axios";
 
 const Dashboard = () => {
+  const params = useParams();
   const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
-  const userId = searchParams.get("user");
+  const location = useLocation();
 
   const [profile, setProfile] = useState({
     id: "",
@@ -24,16 +24,31 @@ const Dashboard = () => {
     },
   ]);
 
-  useEffect(() => {
-    localStorage.setItem("token", token || "");
-    localStorage.setItem("userId", userId || "");
-    if (token && userId) {
-      fetchUserProfile();
-      fetchUserMedia();
-    }
-  }, [token, userId]);
+  useEffect(
+    () => {
+      const token =
+        searchParams.get("access_token") ||
+        params.token ||
+        location.state?.token;
+      const userId =
+        searchParams.get("user_id") || params.userId || location.state?.userId;
+      localStorage.setItem("token", token || "");
+      localStorage.setItem("userId", userId || "");
+      if (token && userId) {
+        fetchUserProfile(token, parseInt(userId));
+        fetchUserMedia(token);
+      }
+    },
+    [
+      // location.state?.token,
+      // location.state?.userId,
+      // params.token,
+      // params.userId,
+      // searchParams,
+    ],
+  );
 
-  const fetchUserProfile = async () => {
+  const fetchUserProfile = async (token: string, userId: number) => {
     try {
       const res = await axios.get(
         `https://graph.instagram.com/${userId}?fields=id,username,account_type,media_count&access_token=${token}`,
@@ -44,7 +59,7 @@ const Dashboard = () => {
     }
   };
 
-  const fetchUserMedia = async () => {
+  const fetchUserMedia = async (token: string) => {
     try {
       const res = await axios.get(
         `https://graph.instagram.com/me/media?fields=id,caption,media_url,permalink,media_type,timestamp&access_token=${token}`,
