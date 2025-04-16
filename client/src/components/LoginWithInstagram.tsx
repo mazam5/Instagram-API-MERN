@@ -1,9 +1,9 @@
 import { Instagram } from "lucide-react";
 import { Button } from "./ui/button";
 const LoginWithInstagram = () => {
-  const { VITE_BACKEND_URL } = import.meta.env;
+  const { VITE_SERVER_BASEURL } = import.meta.env;
   const navigateToInstagramLogin = () => {
-    const loginUrl = `${VITE_BACKEND_URL}/api/auth/instagram`;
+    const loginUrl = `${VITE_SERVER_BASEURL}/api/auth/instagram`;
     window.location.href = loginUrl;
   };
   return (
