@@ -1,12 +1,8 @@
-import { useEffect, useState } from "react";
-import { useSearchParams, useLocation, useParams } from "react-router";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router";
 
 const Dashboard = () => {
-  const params = useParams();
-  const [searchParams] = useSearchParams();
-  const location = useLocation();
-
   const [profile, setProfile] = useState({
     id: "",
     username: "",
@@ -23,30 +19,20 @@ const Dashboard = () => {
       timestamp: "",
     },
   ]);
+  const [search] = useSearchParams();
 
-  useEffect(
-    () => {
-      const token =
-        searchParams.get("access_token") ||
-        params.token ||
-        location.state?.token;
-      const userId =
-        searchParams.get("user_id") || params.userId || location.state?.userId;
-      localStorage.setItem("token", token || "");
-      localStorage.setItem("userId", userId || "");
-      if (token && userId) {
-        fetchUserProfile(token, parseInt(userId));
-        fetchUserMedia(token);
-      }
-    },
-    [
-      // location.state?.token,
-      // location.state?.userId,
-      // params.token,
-      // params.userId,
-      // searchParams,
-    ],
-  );
+  useEffect(() => {
+    const access_token =
+      search.get("access_token") || localStorage.getItem("access_token");
+    const userId = search.get("user_id");
+
+    localStorage.setItem("access_token", access_token || "");
+
+    if (access_token && userId) {
+      fetchUserProfile(access_token, parseInt(userId));
+      fetchUserMedia(access_token);
+    }
+  }, []);
 
   const fetchUserProfile = async (token: string, userId: number) => {
     try {
