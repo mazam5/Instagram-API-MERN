@@ -1,18 +1,25 @@
 import axios from "axios";
-import express from "express";
-import { configDotenv } from "dotenv";
 
-const router = express.Router();
-configDotenv();
+const {
+  META_APP_ID,
+  META_APP_SECRET,
+  REDIRECT_URI,
+  INSTAGRAM_HOST_URL,
+  META_OAUTH_BASE,
+  FRONTEND_URL,
+} = process.env;
 
-const { META_APP_ID, META_APP_SECRET, REDIRECT_URI, INSTAGRAM_HOST_URL } =
-  process.env;
-
-router.get("/instagram/callback", async (req, res) => {
+export const handleInstagramCallback = async (req, res) => {
   const { code } = req.query;
 
+  if (!code) {
+    return res.status(400).send("No code provided");
+  } else {
+    console.log("Code received:", code);
+  }
+
   try {
-    // Exchange code for short-lived access token
+    // Step 1: Exchange code for short-lived access token
     const tokenResponse = await axios.post(
       `https://${META_OAUTH_BASE}/access_token`,
       null,
@@ -28,8 +35,9 @@ router.get("/instagram/callback", async (req, res) => {
     );
 
     const { access_token, user_id } = tokenResponse.data;
+    console.log("Short-lived token response:", tokenResponse.data);
 
-    // Optionally, exchange for a long-lived token
+    // Step 2: Exchange for long-lived token
     const longLivedTokenResponse = await axios.get(
       `https://${INSTAGRAM_HOST_URL}/access_token`,
       {
@@ -42,8 +50,9 @@ router.get("/instagram/callback", async (req, res) => {
     );
 
     const longLivedAccessToken = longLivedTokenResponse.data.access_token;
+    console.log("Long-lived access token:", longLivedAccessToken);
 
-    // Redirect to frontend with token (consider using HTTP-only cookies or sessions for security)
+    // Step 3: Redirect with token
     res.redirect(`${FRONTEND_URL}/dashboard?token=${longLivedAccessToken}`);
   } catch (error) {
     console.error(
@@ -52,6 +61,4 @@ router.get("/instagram/callback", async (req, res) => {
     );
     res.status(500).send("Authentication failed");
   }
-});
-
-export default router;
+};
