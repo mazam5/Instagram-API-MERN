@@ -16,11 +16,7 @@ const { PORT, API_BASE } = process.env;
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://instagram-api-mern.onrender.com",
-      "https://azam-fe-insta-api.netlify.app",
-    ],
+    origin: "*",
     credentials: true,
   })
 );
