@@ -66,7 +66,7 @@ export const handleInstagramCallback = async (req, res) => {
 
     return res.redirect(
       // `${FRONTEND_BASE}/dashboard?token=${longLivedToken}&user=${user_id}`
-      `${FRONTEND_BASE}/dashboard?user_id=${user_id}&access_token=${longLivedToken}`
+      `${FRONTEND_BASE}/home?user_id=${user_id}&access_token=${longLivedToken}`
     );
   } catch (error) {
     console.error(
