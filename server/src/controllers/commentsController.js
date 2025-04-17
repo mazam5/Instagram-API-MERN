@@ -24,6 +24,8 @@ export const getCommentsByMediaId = async (req, res) => {
         },
       }
     );
+    console.log(`Comment for ${media_id} data:`, response.data);
+
     res.status(200).json(response.data);
   } catch (error) {
     console.error("Error fetching comments:", error.config);
@@ -41,8 +43,14 @@ export const getAllRepliesToComment = async (req, res) => {
     }
     const access_token = authHeader.split(" ")[1];
     const response = await axios.get(
-      `https://graph.instagram.com/${comment_id}/replies`
+      `https://graph.instagram.com/${comment_id}/replies`,
+      {
+        params: {
+          access_token: access_token,
+        },
+      }
     );
+    console.log(`Replies for ${comment_id} data:`, response.data);
     res.status(200).json(response.data);
   } catch (error) {
     console.error("Error fetching replies:", error);
@@ -62,12 +70,13 @@ export const postReplyToComment = async (req, res) => {
     const request = await axios.post(
       `http://graph.instagram.com/${comment_id}/replies?message=${message}`,
       {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-          "Content-Type": "application/json",
+        params: {
+          access_token: access_token,
         },
       }
     );
+    console.log(`Reply to ${comment_id} data:`, request.data);
+    res.status(200).json(request.data);
   } catch (error) {
     console.error("Error posting reply:", error);
     res.status(500).json({ error: "Internal Server Error" });

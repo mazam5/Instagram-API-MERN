@@ -13,9 +13,11 @@ import axios from "axios";
 import { Heart, MessageCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
+import clsx from "clsx";
 
 const InstagramMediaCard = ({ item }: { item: MEDIA; profile: PROFILE }) => {
   const [openComments, setOpenComments] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const { VITE_SERVER_BASEURL } = import.meta.env;
   const [comments, setComments] = useState([]);
   useEffect(() => {
@@ -34,16 +36,33 @@ const InstagramMediaCard = ({ item }: { item: MEDIA; profile: PROFILE }) => {
     setComments(data);
     console.log(comments);
   };
+  const captionLimit = 120;
+  const isLongCaption = item.caption.length > captionLimit;
   return (
-    <Card>
+    <Card className="shadow-2xl">
       <Drawer>
         <CardContent>
           <img
             src={item.media_url}
             alt="Post"
             className="mb-2 h-auto w-full rounded-lg"
-          />
-          <p>{item.caption}</p>
+          />{" "}
+          <div className="text-muted-foreground mb-2 text-sm">
+            <p
+              className={clsx("transition-all", !isExpanded && "line-clamp-3")}
+            >
+              {item.caption}
+            </p>
+            {isLongCaption && (
+              <Button
+                variant="link"
+                className="px-0 text-xs"
+                onClick={() => setIsExpanded(!isExpanded)}
+              >
+                {isExpanded ? "Show less" : "Show more"}
+              </Button>
+            )}
+          </div>
           <div className="flex justify-evenly">
             <div className="flex flex-col items-center justify-center gap-2">
               <Heart size={24} />
