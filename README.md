@@ -54,7 +54,7 @@ This is a simple Instagram authentication system built with the MERN stack. It a
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/mazam5/Instagram-Auth-MERN.git
+git clone https://github.com/mazam5/Instagram-API-MERN
 ```
 
 2.Navigate to the project directory:
