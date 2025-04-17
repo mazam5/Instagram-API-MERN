@@ -2,23 +2,14 @@ import axios from "axios";
 import { configDotenv } from "dotenv";
 
 configDotenv();
-const {
-  LOGIN_OAUTH_BASE,
-  CLIENT_ID,
-  FRONTEND_BASE,
-  GRAPH_ACCESS_TOKEN,
-  CLIENT_SECRET,
-} = process.env;
+const { CLIENT_ID, FRONTEND_BASE, CLIENT_SECRET } = process.env;
 
 const redirectUri =
   "https://instagram-api-mern.onrender.com/api/auth/instagram/callback";
 const encodedRedirectUri = encodeURIComponent(redirectUri);
 
 export const handleInstagramLogin = (req, res) => {
-  const embedUrl =
-    "https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=1653002872006320&redirect_uri=https://instagram-api-mern.onrender.com/api/auth/instagram/callback&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish%2Cinstagram_business_manage_insights";
-  // const redirect = `https://${LOGIN_OAUTH_BASE}/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodedRedirectUri}&scope=${SCOPES}&response_type=code`;
-  // console.log(`Redirecting to Instagram login: ${redirect}`);
+  const embedUrl = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=${CLIENT_ID}&redirect_uri=https://instagram-api-mern.onrender.com/api/auth/instagram/callback&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish`;
   res.redirect(embedUrl);
 };
 
@@ -42,7 +33,7 @@ export const handleInstagramCallback = async (req, res) => {
     console.log("Encoded Redirect URI:", encodedRedirectUri);
 
     const tokenResponse = await axios.post(
-      `https://${LOGIN_OAUTH_BASE}/access_token`,
+      `https://api.instagram.com/oauth/access_token`,
       form,
       {
         headers: {
@@ -55,7 +46,7 @@ export const handleInstagramCallback = async (req, res) => {
     const { access_token, user_id } = tokenResponse.data;
 
     const longTokenRes = await axios.get(
-      `https://${GRAPH_ACCESS_TOKEN}/access_token`,
+      `https://graph.instagram.com/access_token`,
       {
         params: {
           grant_type: "ig_exchange_token",
