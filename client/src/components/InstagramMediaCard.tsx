@@ -15,10 +15,14 @@ const InstagramMediaCard = ({
   permalink,
   username,
   displayName,
+  user_profile_picture_url,
+  post_picture_url,
 }: {
   permalink: string;
   username: string;
   displayName: string;
+  user_profile_picture_url: string;
+  post_picture_url: string;
 }) => {
   useEffect(() => {
     if (window.instgrm) {
@@ -56,10 +60,22 @@ const InstagramMediaCard = ({
             </div>
 
             {/* Image Placeholder */}
-            <div className="pt-[19%]"></div>
+            <div className="pt-[19%]">
+              <img
+                src={post_picture_url}
+                alt="Instagram Post"
+                className="h-full w-full rounded-lg object-cover"
+              />
+            </div>
 
             {/* Instagram Icon Placeholder */}
-            <div className="mx-auto mb-3 h-[50px] w-[50px] rounded-full bg-gray-200"></div>
+            <div className="mx-auto mb-3 h-[50px] w-[50px] rounded-full bg-gray-200">
+              <img
+                src={user_profile_picture_url}
+                alt="Instagram Icon"
+                className="h-full w-full rounded-full"
+              />
+            </div>
 
             {/* Link Text */}
             <div className="pt-2">
