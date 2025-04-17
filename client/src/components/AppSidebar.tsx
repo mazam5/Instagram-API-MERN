@@ -1,6 +1,6 @@
 import mainLogo from "@/assets/main-instagram-logo.png";
 import smallLogo from "@/assets/small-logo.jpg";
-import { Grid, Home, LogOut } from "lucide-react";
+import { Github, Home, Linkedin, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "./ui/button";
@@ -29,18 +29,7 @@ import {
 const AppSidebar = () => {
   const navigate = useNavigate();
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
-  const items = [
-    {
-      title: "Home",
-      url: "#home",
-      icon: Home,
-    },
-    {
-      title: "My Posts",
-      url: "#posts",
-      icon: Grid,
-    },
-  ];
+
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("user_id");
@@ -62,16 +51,12 @@ const AppSidebar = () => {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton isActive onClick={() => console.log("Home")}>
+                  <Home />
+                  <span>Home</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -82,9 +67,33 @@ const AppSidebar = () => {
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
+                  <a
+                    href="https://www.linkedin.com/in/azam5"
+                    target="_blank"
+                    className="cursor-pointer"
+                  >
+                    <SidebarMenuButton>
+                      <Linkedin />
+                      <span>Azam</span>
+                    </SidebarMenuButton>
+                  </a>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <a
+                    href="https://github.com/mazam5/Instagram-API-MERN"
+                    target="_blank"
+                    className="cursor-pointer"
+                  >
+                    <SidebarMenuButton>
+                      <Github />
+                      <span>Repository</span>
+                    </SidebarMenuButton>
+                  </a>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
                   <DialogTrigger asChild>
                     <SidebarMenuButton className="cursor-pointer">
-                      <LogOut />
+                      <LogOut size={24} />
                       <span>Logout</span>
                     </SidebarMenuButton>
                   </DialogTrigger>

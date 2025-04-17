@@ -1,106 +1,35 @@
-import { useEffect } from "react";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { MEDIA, PROFILE } from "@/utils/types";
+import { Heart, MessageCircle } from "lucide-react";
+import { Button } from "./ui/button";
 
-// Extend the Window interface to include the 'instgrm' property
-declare global {
-  interface Window {
-    instgrm?: {
-      Embeds: {
-        process: () => void;
-      };
-    };
-  }
-}
-
-const InstagramMediaCard = ({
-  permalink,
-  username,
-  displayName,
-  user_profile_picture_url,
-  post_picture_url,
-}: {
-  permalink: string;
-  username: string;
-  displayName: string;
-  user_profile_picture_url: string;
-  post_picture_url: string;
-}) => {
-  useEffect(() => {
-    if (window.instgrm) {
-      window.instgrm.Embeds.process();
-    } else {
-      const script = document.createElement("script");
-      script.src = "//www.instagram.com/embed.js";
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, [permalink]);
-
+const InstagramMediaCard = ({ item }: { item: MEDIA; profile: PROFILE }) => {
   return (
-    <div className="my-2">
-      <blockquote
-        className="instagram-media m-[1px] w-[calc(100%-2px)] max-w-[540px] min-w-[326px] rounded border-0 bg-white p-0 shadow"
-        data-instgrm-captioned
-        data-instgrm-permalink={permalink}
-        data-instgrm-version="14"
-      >
-        <div className="p-4">
-          <a
-            href={permalink}
-            className="block w-full bg-white text-center no-underline"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {/* Header: Avatar & Text Skeleton */}
-            <div className="mb-4 flex items-center">
-              <div className="mr-4 h-10 w-10 rounded-full bg-gray-200"></div>
-              <div className="flex flex-grow flex-col justify-center">
-                <div className="mb-1 h-3.5 w-[100px] rounded bg-gray-200"></div>
-                <div className="h-3.5 w-[60px] rounded bg-gray-200"></div>
-              </div>
-            </div>
-
-            {/* Image Placeholder */}
-            <div className="pt-[19%]">
-              <img
-                src={post_picture_url}
-                alt="Instagram Post"
-                className="h-full w-full rounded-lg object-cover"
-              />
-            </div>
-
-            {/* Instagram Icon Placeholder */}
-            <div className="mx-auto mb-3 h-[50px] w-[50px] rounded-full bg-gray-200">
-              <img
-                src={user_profile_picture_url}
-                alt="Instagram Icon"
-                className="h-full w-full rounded-full"
-              />
-            </div>
-
-            {/* Link Text */}
-            <div className="pt-2">
-              <div className="font-sans text-sm leading-[18px] font-semibold text-[#3897f0]">
-                View this post on Instagram
-              </div>
-            </div>
-
-            {/* (Optional) Add more mock skeletons here */}
-          </a>
-
-          {/* Caption */}
-          <p className="mt-2 overflow-hidden px-0 py-2 text-center font-sans text-sm leading-[17px] text-ellipsis whitespace-nowrap text-[#c9c8cd]">
-            <a
-              href={permalink}
-              className="text-[#c9c8cd] no-underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              A post shared by {displayName} (@{username})
-            </a>
-          </p>
+    <Card>
+      <CardContent>
+        <img
+          src={item.media_url}
+          alt="Post"
+          className="mb-2 h-auto w-full rounded-lg"
+        />
+        <p>{item.caption}</p>
+        <div className="flex justify-evenly">
+          <div className="flex flex-col items-center justify-center gap-2">
+            <Heart size={24} />
+            <p>{item.like_count} likes</p>
+          </div>
+          <div className="flex flex-col items-center justify-center gap-2">
+            <MessageCircle size={24} />
+            <p>{item.comments_count} comments</p>
+          </div>
         </div>
-      </blockquote>
-    </div>
+      </CardContent>
+      <CardFooter>
+        <Button variant="outline" className="w-full">
+          View Comments
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 

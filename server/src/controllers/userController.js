@@ -2,15 +2,16 @@ import axios from "axios";
 
 export const getUserDataController = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const { access_token } = req.query;
+    const authHeader = req.headers["authorization"];
 
-    if (!userId || !access_token) {
-      return res.status(400).json({ error: "Missing userId or access_token" });
+    if (!authHeader) {
+      return res.status(401).json({ error: "Authorization header missing" });
     }
 
+    const access_token = authHeader.split(" ")[1];
+
     const response = await axios.get(
-      `https://graph.instagram.com/${userId}?fields=id,username,name,biography,followers_count,media_count,website,follows_count,has_profile_pic&access_token=${access_token}`
+      `https://graph.instagram.com/me?fields=id,username,name,website,media_count,follows_count,profile_picture_url,followers_count,biography&access_token=${access_token}`
     );
 
     res.status(200).json(response.data);
