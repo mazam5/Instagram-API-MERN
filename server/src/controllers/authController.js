@@ -28,10 +28,6 @@ export const handleInstagramCallback = async (req, res) => {
     form.append("redirect_uri", redirectUri);
     form.append("code", code);
 
-    console.log("Form data for token exchange:", form);
-    console.log("Redirect URI:", redirectUri);
-    console.log("Encoded Redirect URI:", encodedRedirectUri);
-
     const tokenResponse = await axios.post(
       `https://api.instagram.com/oauth/access_token`,
       form,
@@ -42,7 +38,6 @@ export const handleInstagramCallback = async (req, res) => {
       }
     );
 
-    console.log("Access Token received:", tokenResponse.data);
     const { access_token, user_id } = tokenResponse.data;
 
     const longTokenRes = await axios.get(
@@ -55,7 +50,6 @@ export const handleInstagramCallback = async (req, res) => {
         },
       }
     );
-    console.log("Long-lived token response:", longTokenRes.data);
     const longLivedToken = longTokenRes.data.access_token;
     // res.cookie("access_token", longLivedToken, {
     //   httpOnly: false,

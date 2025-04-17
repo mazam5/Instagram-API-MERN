@@ -6,6 +6,7 @@ import metaRoutes from "./routes/metaRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import mediaRoutes from "./routes/mediaRoutes.js";
 import userDataRoutes from "./routes/userDataRoutes.js";
+import commentsRoutes from "./routes/commentsRoutes.js";
 
 import { configDotenv } from "dotenv";
 
@@ -35,6 +36,7 @@ app.use("/api", metaRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/media", mediaRoutes);
 app.use("/api/userdata", userDataRoutes);
+app.use("/api/comments", commentsRoutes);
 
 app.listen(PORT, () => {
   if (process.env.NODE_ENV !== "production") {

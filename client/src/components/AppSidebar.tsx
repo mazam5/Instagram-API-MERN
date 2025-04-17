@@ -30,10 +30,10 @@ const AppSidebar = () => {
   const navigate = useNavigate();
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("user_id");
-    navigate("/");
+    await navigate("/");
   };
   const { open } = useSidebar();
   return (
